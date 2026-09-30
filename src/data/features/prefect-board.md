@@ -1,7 +1,7 @@
 ---
 title: Prefect Board
 icon: Trophy
-order: 15
+order: 17
 group: people
 homeFeatured: false
 summary: Rank-based prefect appointments per academic year, with a read-only archive of past years.

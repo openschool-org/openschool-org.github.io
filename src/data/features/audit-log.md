@@ -1,7 +1,7 @@
 ---
 title: Audit Log
 icon: History
-order: 4
+order: 6
 group: foundation
 homeFeatured: false
 summary: An append-only record of sensitive changes, with actor and before/after state.

@@ -1,7 +1,7 @@
 ---
 title: Mediums
 icon: Languages
-order: 8
+order: 10
 group: structure
 homeFeatured: false
 summary: Sinhala, Tamil, English, or custom languages of instruction.

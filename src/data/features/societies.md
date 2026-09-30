@@ -1,7 +1,7 @@
 ---
 title: Societies
 icon: Flag
-order: 16
+order: 18
 group: people
 homeFeatured: false
 summary: Clubs and societies with a teacher-in-charge and a five-role student roster, archived by year.
@@ -11,3 +11,4 @@ summary: Clubs and societies with a teacher-in-charge and a five-role student ro
 - Five-role student roster: Leader, Deputy Leader, Secretary, Treasurer, Member
 - Year-scoped, with the same read-only past-year archive view as the prefect board
 - Teacher-in-Charge manages their own society's roster from a "My Society" page; admins can manage any society
+- Memberships show up in the student's Activities tab

@@ -1,7 +1,7 @@
 ---
 title: Houses
 icon: House
-order: 14
+order: 16
 group: people
 homeFeatured: false
 summary: Named houses that students and staff self-balance into automatically.

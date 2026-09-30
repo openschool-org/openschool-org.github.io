@@ -1,5 +1,265 @@
 [
   {
+    "slug": "v0.3.0",
+    "version": "v0.3.0",
+    "name": "OpenSchool v0.3.0",
+    "date": "2026-09-30",
+    "tag": "v0.3.0",
+    "prerelease": false,
+    "githubUrl": "https://github.com/openschool-org/openschool/releases/tag/v0.3.0",
+    "summary": "OpenSchool v0.3.0 lets students and guardians activate their own accounts, adds guided year-end workflows, and strengthens security, privacy, and performance across the platform. This release also rebuilds the frontend around a feature-first architecture, improves usability and accessibility throughout, and adds Sinhala and Tamil language support to the student and parent portals.",
+    "contributors": [
+      "HasithaErandika",
+      "Krishmal2004",
+      "chamals3n4"
+    ],
+    "sections": [
+      {
+        "heading": "What's Included",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "This release includes the following improvements and new functionality:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Self-service account activation for students and guardians using school-issued activation codes, with printable code slips, CSV export, reprinting, revoking,"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "activation windows, and code expiry"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Transactional email with branded templates and a choice of Resend, SMTP, or a console sender for development, plus a Settings → Email page with previews and test"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "sends"
+          },
+          {
+            "type": "list",
+            "items": [
+              "A reworked password reset flow that updates credentials through the identity provider",
+              "Names with initials and calling names for students, teachers, and guardians, used consistently in lists, registers, printouts, and emails",
+              "Guided year-end workflows with editable proposals and a revert option: year rollover, leavers, subject choices, student intake from CSV, promotion and class"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "formation, teacher allocation, timetable generation, and go live"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Promotion rules per grade, class capacity, A/L stream placement, and a waiting list for newly admitted students",
+              "Timetable option blocks for subject choice groups, with a repair pass that closes gaps in teachers' schedules",
+              "A school resource map for homerooms, labs, libraries, halls, and other facilities, with automatic homeroom creation",
+              "Preset curriculum loading for subjects",
+              "Teacher and non-academic staff attendance tabs with search, pagination, and a safe \"mark all as present\" action",
+              "Server-side search and pagination for students, teachers, guardians, notifications, and the audit log",
+              "Late attendance counts in session lists, and removed attendance marks are now saved",
+              "A redesigned teacher overview with today's attendance progress, and a guardian overview with per-child attendance and recent notices",
+              "Grade and class avatars coloured by school section (Primary, Junior, O/L, A/L), used across dashboards, class pages, and the resources page",
+              "Sinhala and Tamil translations for the student and parent portals, with the chosen language saved per user"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Frontend Architecture",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "The frontend has been reorganised into a feature-first structure."
+          },
+          {
+            "type": "paragraph",
+            "text": "Each feature now owns its:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "API calls",
+              "Queries and query keys",
+              "Components",
+              "Pages"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Shared building blocks now live in one place, including DataGrid, FilterBar, ListState, PortalShell, and a set of utility styles. ESLint enforces the layer"
+          },
+          {
+            "type": "paragraph",
+            "text": "rules, so features cannot import another feature's pages or API code, and files stay under 250 lines."
+          },
+          {
+            "type": "paragraph",
+            "text": "The navigation has been simplified into five hubs, and each portal now loads its own routes lazily."
+          }
+        ]
+      },
+      {
+        "heading": "Security and Privacy",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "This release adds substantial security and privacy protections:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Teachers can now only access classes and students they teach or lead, based on their role: class teacher, subject teacher, section head, vice principal, or"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "principal"
+          },
+          {
+            "type": "list",
+            "items": [
+              "NIC numbers, which are used as initial passwords, are no longer visible to teachers, students, or parents",
+              "Database error details are no longer returned to the browser; failures are logged with a request ID instead",
+              "JWT audience checks, so tokens issued for other applications are rejected",
+              "Per-account rate limiting on password reset and activation, alongside per-IP limits",
+              "Structured request logging that no longer records search terms, names, or index numbers",
+              "Request IDs, request timeouts, and security headers on every response",
+              "Access logging for student profile reads",
+              "Data retention and erasure support, with automatic retry of identity cleanup that did not finish",
+              "Enrolment changes are now recorded in the audit log"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Performance and Reliability",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "Trigram search indexes for names, index numbers, employee numbers, phone numbers, and NIC numbers",
+              "Indexes on foreign keys that were missing them, and removal of duplicate indexes",
+              "The database now allows only one current academic year and one current term",
+              "Gzip compression and caching for rarely changing reference data",
+              "A health check endpoint and Prometheus metrics for deployments",
+              "Fewer requests from the teacher dashboard, which no longer loads whole class rosters to count students",
+              "Notification polling reduced to one unread-count request every two minutes, only while the tab is visible"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Usability and Accessibility",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "Page titles, breadcrumbs, a skip link, and a mobile drawer and bottom tab bar",
+              "Filters kept in the URL, sortable table headers, and stacked cards on phones",
+              "A calendar-only, day-first date picker across all forms",
+              "Unsaved-changes warnings on edit screens and restored drafts when marking attendance",
+              "Improved keyboard navigation when entering marks",
+              "A minimum text size of 12px, better focus states, and accessible progress bars",
+              "An offline banner, and a saved copy of the timetable for students and parents",
+              "Consistent, plain-English copy in sentence case"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Background Automation",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Background jobs are now declared by the backend and shown on the Automation page with their checks and last runs:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Academic delivery",
+              "Data retention",
+              "Identity erasure retry",
+              "People compliance",
+              "Security audit",
+              "Structural integrity",
+              "System health"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Year-end workflows also appear on the Automation page, with their steps and last run."
+          }
+        ]
+      },
+      {
+        "heading": "Bug Fixes",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "Fixed activation emails failing silently when the wrong account type was chosen",
+              "Fixed the Assign class teacher picker losing the selected teacher",
+              "Fixed guardian NIC numbers not showing on the Admin Guardians page",
+              "Fixed enrolling a student already in another class reporting success while doing nothing",
+              "Fixed creating a current academic year leaving two current years",
+              "Fixed the teacher dashboard always showing a pending attendance session",
+              "Fixed notes from an earlier attendance status being saved on present records",
+              "Fixed dates showing in US format",
+              "Fixed staff attendance totals missing some staff",
+              "Resolved findings from SonarQube and CodeRabbit reviews"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Upgrade Notes",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "Run the new database migrations 000041 to 000054. They apply automatically when the backend starts.",
+              "Migration 000054 requires exactly one current academic year and one current term. Check your data before upgrading.",
+              "Set the new mail settings in backend/.env: MAIL_PROVIDER, RESEND_API_KEY or SMTP_*, MAIL_FROM, and FRONTEND_URL. Production will not start with the"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "console mail provider."
+          },
+          {
+            "type": "list",
+            "items": [
+              "Set ACTIVATION_CODE_KEY to allow unused activation codes to be reprinted.",
+              "MAIL_REDIRECT_TO is for testing only and must be empty in production.",
+              "Guardian self-activation needs a parent user type and role in ThunderID."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Documentation",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "Added ADR 0008 for self-service account activation",
+              "Added ADR 0009 for transactional email",
+              "Updated ADR 0003, since the single current academic year is now enforced by the database",
+              "Updated docs/FEATURES.md, docs/ARCHITECTURE.md, and docs/THUNDERID.md",
+              "Added a security and performance playbook and an updated PR template"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "slug": "v0.2.0",
     "version": "v0.2.0",
     "name": "OpenSchool v0.2.0",

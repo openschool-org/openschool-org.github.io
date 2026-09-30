@@ -1,7 +1,7 @@
 ---
 title: Non-academic Staff
 icon: Briefcase
-order: 13
+order: 15
 group: people
 homeFeatured: false
 summary: Lab assistants, librarians, office staff, and other non-teaching roles.

@@ -1,14 +1,14 @@
 ---
 title: Automation & Watchers
 icon: Bot
-order: 23
+order: 26
 group: operations
 homeFeatured: false
-summary: Five background agents that watch for data issues and keep the database backed up, without sitting on any request's critical path.
+summary: Seven background agents that watch for data issues, keep the database backed up, and handle data retention.
 ---
 
-- Five agents covering structural integrity, people compliance, academic delivery, security auditing, and system health/backups
-- Each agent runs several checks concurrently, from statistical audit-log anomaly detection to attendance-compliance tracking
-- Findings surface as dismissible banners on the relevant admin page, plus a central Automation panel
-- Every agent independently toggleable except System Health, which is always on
-- Runs on its own schedule or via an admin-triggered "Run now" - never as part of a page load
+- Seven agents: structural integrity, people compliance, academic delivery, security audit, system health, data retention, and identity erasure retry
+- Plain SQL and arithmetic on cron schedules - no AI or outside service
+- Each agent runs its checks concurrently
+- Findings go out as in-app notifications to admins, plus dismissible banners on the relevant page
+- Every agent can be disabled from Settings > Automation, except System Health

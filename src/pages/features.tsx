@@ -14,7 +14,7 @@ const layerMeta: Record<FeatureGroup, {order: number; eyebrow: string; title: st
     order: 1,
     eyebrow: 'Layer 01 · Foundation',
     title: 'Platform Foundation',
-    desc: 'The base every other module sits on - the school profile, ThunderID-backed identity, the in-app leadership hierarchy, and the audit log.',
+    desc: 'The base every other module sits on - the school profile, ThunderID-backed identity and account activation, the in-app leadership hierarchy, role-based portals, and the audit log.',
     accent: '#0a5bf2',
   },
   structure: {
@@ -28,14 +28,14 @@ const layerMeta: Record<FeatureGroup, {order: number; eyebrow: string; title: st
     order: 3,
     eyebrow: 'Layer 03 · People & Classes',
     title: 'People & Classes',
-    desc: 'Where the academic structure meets real people - students, teachers, guardians, non-academic staff, houses, and the prefect board.',
+    desc: 'Where the academic structure meets real people - students, teachers, guardians, non-academic staff, houses, the prefect board, and societies.',
     accent: '#6d28d9',
   },
   operations: {
     order: 4,
     eyebrow: 'Layer 04 · Daily Operations',
     title: 'Daily Operations',
-    desc: 'What runs every school day, once the structure and people are in place - attendance, records, promotion, timetables, notifications, and reports.',
+    desc: 'What runs every school day, once the structure and people are in place - attendance, records, year-end workflows, promotion, timetables, notifications, reports, and background automation.',
     accent: '#b45309',
   },
 };

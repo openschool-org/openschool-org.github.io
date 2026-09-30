@@ -8,6 +8,7 @@ summary: The school profile and the first-run Setup wizard that gets a fresh ins
 ---
 
 - Guided School Setup wizard: school details → houses → grades → classes → mediums
-- One authoritative school profile: name, address, contact info, inline logo
+- Resumable and idempotent - blocks the rest of the app until the school record and grade range exist
+- One authoritative school profile: name, address, phone, email, inline logo
 - Editable grade range (1-13) the school runs
-- Resumable and idempotent - safe to skip steps and finish later from Settings
+- School type (boys / girls / mixed), enforced against student gender at create/update time

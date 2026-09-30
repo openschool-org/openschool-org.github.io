@@ -1,7 +1,7 @@
 ---
 title: Streams & Stream Groups
 icon: Waves
-order: 7
+order: 9
 group: structure
 homeFeatured: false
 summary: A/L streams and stream groups for Grade 12/13.

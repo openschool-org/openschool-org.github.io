@@ -23,6 +23,9 @@ import {
   BarChart3,
   Flag,
   Bot,
+  MailCheck,
+  LayoutDashboard,
+  Workflow,
   type LucideProps,
 } from 'lucide-react';
 import type {FeatureIcon} from '@site/src/data/generated/features';
@@ -51,6 +54,9 @@ const registry: Record<FeatureIcon, React.ComponentType<LucideProps>> = {
   BarChart3,
   Flag,
   Bot,
+  MailCheck,
+  LayoutDashboard,
+  Workflow,
 };
 
 type Props = LucideProps & {
