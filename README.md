@@ -2,7 +2,7 @@
 
 The website and documentation for [OpenSchool](https://github.com/openschool-org/openschool), a free and open-source school management system built for Sri Lankan schools.
 
-The site is live at [openschool.lk](https://openschool.lk) and is built with [Docusaurus](https://docusaurus.io).
+The site is built with [Docusaurus](https://docusaurus.io) and published with GitHub Pages.
 
 ## Getting started
 
@@ -26,7 +26,7 @@ Files in `src/data/generated` are created automatically on every start and build
 
 ## Contributing
 
-Issues and pull requests are welcome. See the [contributing guide](https://openschool.lk/docs/contributing) to get started.
+Issues and pull requests are welcome. See the [contributing guide](docs/contributing.md) to get started.
 
 ## License
 

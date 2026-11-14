@@ -4,7 +4,7 @@ import {lightCodeTheme, darkCodeTheme} from './src/theme-prism';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-const SITE_URL = 'https://openschool.lk';
+const SITE_URL = 'https://openschool-org.github.io';
 
 const SITE_DESCRIPTION =
   'OpenSchool is a free, open-source, self-hosted school management system built for Sri Lankan schools - covering academic years, students, guardians, attendance, timetables, and more.';
@@ -41,7 +41,7 @@ const config: Config = {
   baseUrl: '/',
 
   organizationName: 'openschool-org',
-  projectName: 'openschool-web',
+  projectName: 'openschool-org.github.io',
 
   onBrokenLinks: 'throw',
 
@@ -90,7 +90,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           routeBasePath: 'docs',
-          editUrl: 'https://github.com/openschool-org/openschool-web/edit/main/docs/',
+          editUrl: 'https://github.com/openschool-org/openschool-org.github.io/edit/main/docs/',
         },
         blog: false,
         theme: {

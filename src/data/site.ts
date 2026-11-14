@@ -2,10 +2,10 @@ import features, {type Feature, type FeatureGroup} from '@site/src/data/generate
 import changelog from '@site/src/data/generated/changelog';
 import contributors, {type Contributor} from '@site/src/data/generated/contributors';
 
-export const SITE_URL = 'https://openschool.lk';
+export const SITE_URL = 'https://openschool-org.github.io';
 export const GITHUB_ORG_URL = 'https://github.com/openschool-org';
 export const GITHUB_URL = 'https://github.com/openschool-org/openschool';
-export const WEBSITE_REPO_URL = 'https://github.com/openschool-org/openschool-web';
+export const WEBSITE_REPO_URL = 'https://github.com/openschool-org/openschool-org.github.io';
 
 export const links = {
   repo: GITHUB_URL,

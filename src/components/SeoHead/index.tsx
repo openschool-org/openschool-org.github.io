@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from '@docusaurus/Head';
-
-const SITE_URL = 'https://openschool.lk';
+import {SITE_URL} from '@site/src/data/site';
 
 type Props = {
   path: string;
