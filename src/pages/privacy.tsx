@@ -29,38 +29,31 @@ export default function Privacy(): React.ReactElement {
       />
       <header className="os-page-header">
         <div className="os-container">
-          <div className={styles.introInner}>
-            <span className="os-badge">Legal</span>
-            <h1 className={`os-heading ${styles.title}`}>Privacy Policy</h1>
-            <p className={styles.effective}>Effective {EFFECTIVE_DATE}</p>
-          </div>
+          <span className="os-eyebrow">Legal</span>
+          <h1 className="os-h1">Privacy policy</h1>
+          <p className="os-lead">
+            This website collects no personal data. OpenSchool deployments are operated by schools,
+            not by this project.
+          </p>
+          <p className={styles.effective}>Effective {EFFECTIVE_DATE}</p>
         </div>
       </header>
 
-      <section className="os-section os-section--tight">
-        <div className="os-container">
-          <div className={styles.layout}>
-            <nav className={styles.toc} aria-label="Table of contents">
-              <span className={styles.tocLabel}>On this page</span>
-              <ul className={styles.tocList}>
-                {sections.map((s) => (
-                  <li key={s.id}>
-                    <a href={`#${s.id}`}>{s.title}</a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+      <section className="os-section">
+        <div className="os-container os-split">
+          <nav className="os-split__aside" aria-label="Table of contents">
+            <span className="os-eyebrow">On this page</span>
+            <ul className={styles.tocList}>
+              {sections.map((s) => (
+                <li key={s.id}>
+                  <a href={`#${s.id}`}>{s.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-            <div className={`os-panel ${styles.article}`}>
-              <p className={styles.lead}>
-                OpenSchool is free, open-source software that schools run on their own
-                infrastructure. This policy is short because there isn&apos;t much to say: this
-                site (openschool.lk) doesn&apos;t run a hosted service, doesn&apos;t operate on
-                anyone&apos;s behalf, and doesn&apos;t collect personal data from visitors. It
-                covers only what this website itself does.
-              </p>
-
-              <h2 id="overview" className={styles.h2}>
+          <div className="os-prose">
+              <h2 id="overview">
                 1. Overview
               </h2>
               <p>
@@ -73,7 +66,7 @@ export default function Privacy(): React.ReactElement {
                 of that specific instance sets, not by us.
               </p>
 
-              <h2 id="this-website" className={styles.h2}>
+              <h2 id="this-website">
                 2. This Website
               </h2>
               <p>
@@ -84,7 +77,7 @@ export default function Privacy(): React.ReactElement {
                 are the extent of any technical data involved.
               </p>
 
-              <h2 id="self-hosted-software" className={styles.h2}>
+              <h2 id="self-hosted-software">
                 3. The OpenSchool Software
               </h2>
               <p>
@@ -100,7 +93,7 @@ export default function Privacy(): React.ReactElement {
                 with this project.
               </p>
 
-              <h2 id="cookies" className={styles.h2}>
+              <h2 id="cookies">
                 4. Cookies &amp; Analytics
               </h2>
               <p>
@@ -109,7 +102,7 @@ export default function Privacy(): React.ReactElement {
                 collected and how to opt out.
               </p>
 
-              <h2 id="third-party-links" className={styles.h2}>
+              <h2 id="third-party-links">
                 5. Third-Party Links
               </h2>
               <p>
@@ -121,7 +114,7 @@ export default function Privacy(): React.ReactElement {
                 , not this one.
               </p>
 
-              <h2 id="changes" className={styles.h2}>
+              <h2 id="changes">
                 6. Changes to This Policy
               </h2>
               <p>
@@ -129,7 +122,7 @@ export default function Privacy(): React.ReactElement {
                 the effective date at the top of this page.
               </p>
 
-              <h2 id="contact" className={styles.h2}>
+              <h2 id="contact">
                 7. Contact
               </h2>
               <p>
@@ -141,7 +134,6 @@ export default function Privacy(): React.ReactElement {
                 , or see the <Link to="/community">Community</Link> page for other ways to reach
                 the maintainers.
               </p>
-            </div>
           </div>
         </div>
       </section>

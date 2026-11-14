@@ -1,189 +1,197 @@
-import React from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import {ArrowRight, Check, Layers, Boxes, ListChecks} from 'lucide-react';
-import DynamicIcon from '@site/src/components/DynamicIcon';
-import Reveal from '@site/src/components/Reveal';
+import useBrokenLinks from '@docusaurus/useBrokenLinks';
+import {ArrowRight, Check, X} from 'lucide-react';
 import SeoHead from '@site/src/components/SeoHead';
-import features, {type FeatureGroup} from '@site/src/data/generated/features';
+import {PageHero, Highlight, CtaBand} from '@site/src/components/Page';
+import {layers, moduleCount, type Layer} from '@site/src/data/site';
+import type {Feature, FeatureGroup} from '@site/src/data/generated/features';
 import styles from './features.module.css';
 
-const layerMeta: Record<FeatureGroup, {order: number; eyebrow: string; title: string; desc: string; accent: string}> = {
-  foundation: {
-    order: 1,
-    eyebrow: 'Layer 01 · Foundation',
-    title: 'Platform Foundation',
-    desc: 'The base every other module sits on - the school profile, ThunderID-backed identity and account activation, the in-app leadership hierarchy, role-based portals, and the audit log.',
-    accent: '#0a5bf2',
-  },
-  structure: {
-    order: 2,
-    eyebrow: 'Layer 02 · Academic Structure',
-    title: 'Academic Structure',
-    desc: 'How a school year is organized before a single student is enrolled - years, the full Grade 1-13 flow, streams, mediums, and curriculum.',
-    accent: '#0f766e',
-  },
-  people: {
-    order: 3,
-    eyebrow: 'Layer 03 · People & Classes',
-    title: 'People & Classes',
-    desc: 'Where the academic structure meets real people - students, teachers, guardians, non-academic staff, houses, the prefect board, and societies.',
-    accent: '#6d28d9',
-  },
-  operations: {
-    order: 4,
-    eyebrow: 'Layer 04 · Daily Operations',
-    title: 'Daily Operations',
-    desc: 'What runs every school day, once the structure and people are in place - attendance, records, year-end workflows, promotion, timetables, notifications, reports, and background automation.',
-    accent: '#b45309',
-  },
-};
+type Filter = 'all' | FeatureGroup;
 
-const layers = Object.entries(layerMeta)
-  .map(([group, meta]) => ({
-    group: group as FeatureGroup,
-    ...meta,
-    modules: features.filter((f) => f.group === group),
-  }))
-  .sort((a, b) => a.order - b.order);
+const allModules = layers.flatMap((l) => l.modules);
+const layerOf = new Map<string, Layer>(layers.flatMap((l) => l.modules.map((m) => [m.slug, l] as const)));
 
-const totalCapabilities = features.reduce((sum, f) => sum + f.items.length, 0);
+function ModuleCard({module, onOpen}: {module: Feature; onOpen: (slug: string) => void}): React.ReactElement {
+  return (
+    <li>
+      <button type="button" className={styles.card} onClick={() => onOpen(module.slug)} aria-haspopup="dialog">
+        <span className={styles.cardTitle}>{module.title}</span>
+        <span className={styles.cardSummary}>{module.summary}</span>
+        <ul className={styles.preview}>
+          {module.items.slice(0, 3).map((item) => (
+            <li key={item}>
+              <Check size={15} strokeWidth={2.25} aria-hidden="true" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <span className={styles.cardFooter}>
+          {module.items.length > 3 ? `View all ${module.items.length} capabilities` : 'View details'}
+          <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
+        </span>
+      </button>
+    </li>
+  );
+}
 
-const stats = [
-  {icon: Layers, value: layers.length, label: 'platform layers'},
-  {icon: Boxes, value: features.length, label: 'modules'},
-  {icon: ListChecks, value: totalCapabilities, label: 'individual capabilities'},
-];
+function ModulePanel({module, onClose}: {module: Feature; onClose: () => void}): React.ReactElement {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const layer = layerOf.get(module.slug);
 
-export default function Features(): React.ReactElement {
-  const introPhotoSrc = useBaseUrl('img/school/school4.webp');
-
-  const description = `${features.length} modules across ${layers.length} layers, from the school profile up to daily operations - academic years, classes, students, guardians, attendance, timetables, and more.`;
+  useEffect(() => {
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previous;
+    };
+  }, [onClose]);
 
   return (
-    <Layout title="Features & Modules" description={description}>
-      <SeoHead
-        path="/features"
-        title={`Features & Modules - ${features.length} Capabilities Across ${layers.length} Layers`}
-        description={description}
+    <div className={styles.overlay} onClick={onClose}>
+      <aside
+        className={styles.panel}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="module-panel-title"
+        onClick={(e) => e.stopPropagation()}>
+        <div className={styles.panelHead}>
+          {layer ? <span className={styles.panelLayer}>{layer.title}</span> : null}
+          <button ref={closeRef} type="button" className={styles.close} onClick={onClose} aria-label="Close">
+            <X size={18} strokeWidth={2} aria-hidden="true" />
+          </button>
+        </div>
+        <h2 id="module-panel-title" className={styles.panelTitle}>
+          {module.title}
+        </h2>
+        <p className={styles.panelSummary}>{module.summary}</p>
+        <h3 className={styles.panelSub}>
+          Capabilities <span className={styles.count}>{module.items.length}</span>
+        </h3>
+        <ul className={styles.capabilities}>
+          {module.items.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+  );
+}
+
+export default function Features(): React.ReactElement {
+  const brokenLinks = useBrokenLinks();
+  layers.forEach((layer) => {
+    brokenLinks.collectAnchor(layer.group);
+    layer.modules.forEach((m) => brokenLinks.collectAnchor(m.slug));
+  });
+
+  const [filter, setFilter] = useState<Filter>('all');
+  const [openSlug, setOpenSlug] = useState<string | null>(null);
+
+  // Deep links: #attendance-management opens that module, #operations
+  // filters to that layer.
+  useEffect(() => {
+    const fromHash = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      if (allModules.some((m) => m.slug === id)) setOpenSlug(id);
+      else if (layers.some((l) => l.group === id)) setFilter(id as FeatureGroup);
+    };
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+    return () => window.removeEventListener('hashchange', fromHash);
+  }, []);
+
+  const open = useCallback((slug: string) => {
+    setOpenSlug(slug);
+    window.history.replaceState(null, '', `#${slug}`);
+  }, []);
+
+  const close = useCallback(() => {
+    setOpenSlug(null);
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  }, []);
+
+  const openModule = allModules.find((m) => m.slug === openSlug);
+  const visibleLayers = filter === 'all' ? layers : layers.filter((l) => l.group === filter);
+  const description = `${moduleCount} modules across the foundation, academic structure, people and daily operations of a school.`;
+
+  return (
+    <Layout title="Features" description={description}>
+      <SeoHead path="/features" title="Features and modules" description={description} />
+
+      <PageHero
+        title={
+          <>
+            Platform features and <Highlight>modules</Highlight>
+          </>
+        }
+        lead={`${moduleCount} modules, organised in four layers. Filter by layer, then select any module to see everything it does.`}
       />
-      <header className="os-page-header">
-        <div className="os-container">
-          <div className={styles.introGrid}>
-            <div className={styles.introInner}>
-              <h1 className={`os-heading ${styles.title}`}>
-                {features.length} modules. {layers.length} layers. One school system.
-              </h1>
-              <p className={`os-lead ${styles.lead}`}>
-                OpenSchool isn&apos;t {features.length} disconnected features - it&apos;s four
-                layers that build on one another, and every module below shows exactly what it
-                does: a secured foundation, the academic structure for a year, the people inside
-                it, and the daily operations that run on top.
-              </p>
-              <div className={styles.jumpNav} aria-label="Jump to a layer">
-                {layers.map((layer) => (
-                  <a
-                    key={layer.group}
-                    href={`#${layer.group}`}
-                    className={styles.jumpLink}
-                    style={{'--layer-accent': layer.accent} as React.CSSProperties}>
-                    <span className={styles.jumpDot} aria-hidden="true" />
-                    {layer.title}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <div className={styles.introPhotoWrap}>
-              <img
-                src={introPhotoSrc}
-                alt="A teacher and students in a classroom in Sri Lanka"
-                className={styles.introPhoto}
-                loading="eager"
-                decoding="async"
-              />
-            </div>
-          </div>
-        </div>
-      </header>
 
-      <section className="os-section os-section--tight">
-        <div className="os-container">
-          <div className={styles.statRow}>
-            {stats.map((s) => (
-              <div key={s.label} className={`os-card ${styles.statCard}`}>
-                <s.icon className={styles.statIcon} size={22} strokeWidth={1.75} />
-                <div>
-                  <div className={styles.statValue}>{s.value}</div>
-                  <div className={styles.statLabel}>{s.label}</div>
-                </div>
-              </div>
+      <div className={styles.filterBar}>
+        <div className={`os-container ${styles.filterInner}`}>
+          <div className={styles.tabs} role="tablist" aria-label="Filter modules by layer">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={filter === 'all'}
+              className={filter === 'all' ? styles.tabActive : styles.tab}
+              onClick={() => setFilter('all')}>
+              All modules <span className={styles.tabCount}>{moduleCount}</span>
+            </button>
+            {layers.map((l) => (
+              <button
+                key={l.group}
+                type="button"
+                role="tab"
+                aria-selected={filter === l.group}
+                className={filter === l.group ? styles.tabActive : styles.tab}
+                onClick={() => setFilter(l.group)}>
+                {l.title} <span className={styles.tabCount}>{l.modules.length}</span>
+              </button>
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="os-section os-section--tight">
-        <div className={styles.layerContainer}>
-          <div className={styles.layerStack}>
-            {layers.map((layer, i) => (
-              <div key={layer.group} className={styles.layerRow}>
-                <Reveal>
-                  <div
-                    id={layer.group}
-                    className={`os-panel ${styles.layerPanel}`}
-                    style={{'--layer-accent': layer.accent} as React.CSSProperties}>
-                    <div className={styles.layerHeader}>
-                      <span className="os-eyebrow">{layer.eyebrow}</span>
-                      <h2 className={styles.layerTitle}>{layer.title}</h2>
-                      <p className={styles.layerDesc}>{layer.desc}</p>
-                    </div>
-                    <div className={styles.moduleGrid}>
-                      {layer.modules.map((f) => (
-                        <div key={f.slug} className={`os-card ${styles.featureCard}`}>
-                          <div className={styles.featureHead}>
-                            <div className={styles.featureIcon}>
-                              <DynamicIcon name={f.icon} size={22} strokeWidth={1.75} />
-                            </div>
-                            <h3 className={styles.featureTitle}>{f.title}</h3>
-                          </div>
-                          <p className={styles.featureSummary}>{f.summary}</p>
-                          <ul className={styles.featureList}>
-                            {f.items.map((item) => (
-                              <li key={item}>
-                                <Check className={styles.checkMark} size={15} strokeWidth={2.5} />
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </Reveal>
-                {i < layers.length - 1 && <div className={styles.layerConnector} aria-hidden="true" />}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="os-section">
-        <div className="os-container">
-          <div className={`os-panel ${styles.ctaBanner}`}>
-            <div>
-              <h2 className="os-heading" style={{marginBottom: '0.5rem'}}>
-                Ready to see it running?
+      <div className={`os-container ${styles.content}`}>
+        {visibleLayers.map((layer) => (
+          <section key={layer.group} id={layer.group} className={styles.layer} aria-labelledby={`${layer.group}-title`}>
+            <div className={styles.layerHead}>
+              <h2 id={`${layer.group}-title`} className={styles.layerTitle}>
+                {layer.title}
+                <span className={styles.layerCount}>{layer.modules.length} modules</span>
               </h2>
-              <p className={styles.ctaText}>Stand up a fresh instance with the Setup Walkthrough.</p>
+              <p className={styles.layerDesc}>{layer.desc}</p>
             </div>
-            <Link className="os-btn os-btn--primary" to="/docs/setup">
-              Setup Walkthrough
-              <ArrowRight size={17} strokeWidth={2.25} />
-            </Link>
-          </div>
-        </div>
-      </section>
+            <ul className={styles.grid}>
+              {layer.modules.map((m) => (
+                <ModuleCard key={m.slug} module={m} onOpen={open} />
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+
+      <CtaBand
+        title="See every module in action"
+        text="The setup walkthrough takes a fresh instance from empty to operational and tours each module hands-on."
+        actions={
+          <Link className="os-btn os-btn--primary" to="/docs/setup">
+            Setup walkthrough
+          </Link>
+        }
+      />
+
+      {openModule ? <ModulePanel module={openModule} onClose={close} /> : null}
     </Layout>
   );
 }

@@ -1,64 +1,71 @@
-.introInner {
-  max-width: 720px;
+.people {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 900px;
   margin: 0 auto;
-  text-align: center;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 760px) {
+  .people {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .people {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.people a {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.title {
-  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
-  margin: 1.25rem 0 1.25rem;
-}
-
-.lead {
-  max-width: 620px;
+  gap: 4px;
+  padding: 32px 20px 28px;
+  border: 1px solid var(--os-border-strong);
+  border-radius: 8px;
+  background: var(--os-bg);
+  color: var(--os-fg);
   text-align: center;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
 }
 
-.channelCard {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.6rem;
-  height: 100%;
-}
-
-.channelIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: var(--os-accent-soft);
-  color: var(--os-accent);
-  flex-shrink: 0;
-}
-
-.channelTitle {
-  font-weight: 700;
-  font-size: 0.95rem;
-  margin-bottom: 0.35rem;
-}
-
-.channelValue {
-  color: var(--os-text-muted);
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-
-.channelLink {
-  display: inline-block;
-  margin-top: 0.6rem;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--os-accent);
+.people a:hover {
+  border-color: var(--os-accent);
+  color: var(--os-fg);
   text-decoration: none;
 }
 
-.channelLink:hover {
-  text-decoration: underline;
+.people img {
+  width: 88px;
+  height: 88px;
+  margin-bottom: 14px;
+  border: 1px solid var(--os-border);
+  border-radius: 50%;
+  background: var(--os-bg-muted);
 }
 
+.personName,
+.personHandle {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.personName {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.personHandle {
+  font-family: var(--os-font-mono);
+  font-size: 0.8125rem;
+  color: var(--os-fg-subtle);
+}

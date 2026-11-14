@@ -50,38 +50,11 @@ const changelog: ChangelogRelease[] = [
           {
             "type": "list",
             "items": [
-              "Self-service account activation for students and guardians using school-issued activation codes, with printable code slips, CSV export, reprinting, revoking,"
-            ]
-          },
-          {
-            "type": "paragraph",
-            "text": "activation windows, and code expiry"
-          },
-          {
-            "type": "list",
-            "items": [
-              "Transactional email with branded templates and a choice of Resend, SMTP, or a console sender for development, plus a Settings → Email page with previews and test"
-            ]
-          },
-          {
-            "type": "paragraph",
-            "text": "sends"
-          },
-          {
-            "type": "list",
-            "items": [
+              "Self-service account activation for students and guardians using school-issued activation codes, with printable code slips, CSV export, reprinting, revoking, activation windows, and code expiry",
+              "Transactional email with branded templates and a choice of Resend, SMTP, or a console sender for development, plus a Settings → Email page with previews and test sends",
               "A reworked password reset flow that updates credentials through the identity provider",
               "Names with initials and calling names for students, teachers, and guardians, used consistently in lists, registers, printouts, and emails",
-              "Guided year-end workflows with editable proposals and a revert option: year rollover, leavers, subject choices, student intake from CSV, promotion and class"
-            ]
-          },
-          {
-            "type": "paragraph",
-            "text": "formation, teacher allocation, timetable generation, and go live"
-          },
-          {
-            "type": "list",
-            "items": [
+              "Guided year-end workflows with editable proposals and a revert option: year rollover, leavers, subject choices, student intake from CSV, promotion and class formation, teacher allocation, timetable generation, and go live",
               "Promotion rules per grade, class capacity, A/L stream placement, and a waiting list for newly admitted students",
               "Timetable option blocks for subject choice groups, with a repair pass that closes gaps in teachers' schedules",
               "A school resource map for homerooms, labs, libraries, halls, and other facilities, with automatic homeroom creation",
@@ -140,16 +113,7 @@ const changelog: ChangelogRelease[] = [
           {
             "type": "list",
             "items": [
-              "Teachers can now only access classes and students they teach or lead, based on their role: class teacher, subject teacher, section head, vice principal, or"
-            ]
-          },
-          {
-            "type": "paragraph",
-            "text": "principal"
-          },
-          {
-            "type": "list",
-            "items": [
+              "Teachers can now only access classes and students they teach or lead, based on their role: class teacher, subject teacher, section head, vice principal, or principal",
               "NIC numbers, which are used as initial passwords, are no longer visible to teachers, students, or parents",
               "Database error details are no longer returned to the browser; failures are logged with a request ID instead",
               "JWT audience checks, so tokens issued for other applications are rejected",
@@ -251,16 +215,7 @@ const changelog: ChangelogRelease[] = [
             "items": [
               "Run the new database migrations 000041 to 000054. They apply automatically when the backend starts.",
               "Migration 000054 requires exactly one current academic year and one current term. Check your data before upgrading.",
-              "Set the new mail settings in backend/.env: MAIL_PROVIDER, RESEND_API_KEY or SMTP_*, MAIL_FROM, and FRONTEND_URL. Production will not start with the"
-            ]
-          },
-          {
-            "type": "paragraph",
-            "text": "console mail provider."
-          },
-          {
-            "type": "list",
-            "items": [
+              "Set the new mail settings in backend/.env: MAIL_PROVIDER, RESEND_API_KEY or SMTP_*, MAIL_FROM, and FRONTEND_URL. Production will not start with the console mail provider.",
               "Set ACTIVATION_CODE_KEY to allow unused activation codes to be reprinted.",
               "MAIL_REDIRECT_TO is for testing only and must be empty in production.",
               "Guardian self-activation needs a parent user type and role in ThunderID."

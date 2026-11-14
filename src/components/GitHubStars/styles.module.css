@@ -1,0 +1,43 @@
+.button {
+  display: inline-flex;
+  align-items: stretch;
+  height: 36px;
+  border: 1px solid var(--os-border-strong);
+  border-radius: var(--os-radius);
+  background: var(--os-bg);
+  color: var(--os-fg) !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none !important;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.button:hover {
+  border-color: var(--os-fg);
+}
+
+.label,
+.count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+}
+
+.count {
+  border-left: 1px solid var(--os-border-strong);
+  font-family: var(--os-font-mono);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--os-fg-muted);
+}
+
+.count svg {
+  color: #d4a72c;
+}
+
+.button:hover .count {
+  color: var(--os-fg);
+}

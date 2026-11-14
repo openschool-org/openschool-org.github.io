@@ -1,155 +1,147 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import {ShieldCheck, MapPinned, Code, TrendingUp, Building2, Presentation, UsersRound, GraduationCap, ArrowRight} from 'lucide-react';
+import {ArrowRight, ArrowUpRight} from 'lucide-react';
 import SeoHead from '@site/src/components/SeoHead';
+import {
+  PageHero,
+  Highlight,
+  Section,
+  SectionHead,
+  CardGrid,
+  Card,
+  CtaBand,
+} from '@site/src/components/Page';
+import {links} from '@site/src/data/site';
 import styles from './about.module.css';
+
+const DESCRIPTION =
+  'Why OpenSchool exists, the principles it is built on, and how the project is run.';
 
 const principles = [
   {
-    icon: ShieldCheck,
-    title: 'Secure by Default',
-    desc: 'ThunderID-backed authentication, server-side role checks on every action, rate limiting, and an audit log for sensitive changes.',
+    title: 'Fit the national system first',
+    body: 'The data model follows the structure of a Sri Lankan school: Grades 1–13, O/Level and A/Level streams, mediums of instruction, houses, prefects and the staff hierarchy.',
   },
   {
-    icon: MapPinned,
-    title: 'Built for the Sri Lankan System',
-    desc: 'The full Grade 1-13 flow - Scholarship years, O/Level, and A/Level streams like Science, Commerce, and Arts - modeled the way local schools actually run.',
+    title: 'Schools keep control of their data',
+    body: 'Each deployment belongs to the school that runs it. The project never sees, stores or processes any school’s records.',
   },
   {
-    icon: Code,
-    title: 'Open Source & Self-Hosted',
-    desc: 'Apache 2.0 licensed, with the full source available. Run your own instance on your own infrastructure and keep your data under your own control.',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Built to Scale',
-    desc: 'From a single classroom to a full multi-grade school, the same data model holds up as records grow.',
+    title: 'Transparency by default',
+    body: 'The source, issue tracker, release history and the reasoning behind significant design decisions are all public and open to audit.',
   },
 ];
 
-const audiences = [
-  {icon: Building2, title: 'Principals & Admins', desc: 'Manage the school profile, academic years, grades, and classes from one dashboarded structure.'},
-  {icon: Presentation, title: 'Teachers', desc: 'View assigned classes, mark attendance, and see the students and subjects you’re responsible for.'},
-  {icon: UsersRound, title: 'Guardians', desc: 'Stay linked to your child’s class, attendance, and subject selections as a primary or secondary contact.'},
-  {icon: GraduationCap, title: 'Students', desc: 'Get a clear record of your class, subjects, electives, and attendance history over the academic year.'},
+type GovItem = {title: string; body: string; label: string; to?: string; href?: string};
+
+const governance: GovItem[] = [
+  {
+    title: 'Open development',
+    body: 'All work happens in public through issues and pull requests, reviewed by maintainers before it is merged.',
+    label: 'Source repository',
+    href: links.repo,
+  },
+  {
+    title: 'Recorded decisions',
+    body: 'Significant design choices are documented as architecture decision records, including their trade-offs and known weaknesses.',
+    label: 'Decision records',
+    to: '/docs/adr',
+  },
+  {
+    title: 'Responsible disclosure',
+    body: 'Security vulnerabilities are reported privately and handled under the published security policy, never in public issues.',
+    label: 'Security policy',
+    href: links.security,
+  },
 ];
+
+function GovLink({item}: {item: GovItem}): React.ReactElement {
+  return item.href ? (
+    <a className="os-link" href={item.href} target="_blank" rel="noopener noreferrer">
+      {item.label}
+      <ArrowUpRight size={15} strokeWidth={2} aria-hidden="true" />
+    </a>
+  ) : (
+    <Link className="os-link" to={item.to}>
+      {item.label}
+      <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
+    </Link>
+  );
+}
 
 export default function About(): React.ReactElement {
-  const introPhotoSrc = useBaseUrl('img/school/school5.webp');
-
   return (
-    <Layout
-      title="About"
-      description="Why OpenSchool exists: a free, open-source, self-hosted school management system built specifically for the way Sri Lankan schools operate.">
-      <SeoHead
-        path="/about"
-        title="About Us - Open Source School Management"
-        description="Why OpenSchool exists: a free, open-source, self-hosted school management system built specifically for the way Sri Lankan schools operate."
+    <Layout title="About" description={DESCRIPTION}>
+      <SeoHead path="/about" title="About the project" description={DESCRIPTION} />
+
+      <PageHero
+        title={
+          <>
+            Why we&apos;re building <Highlight>OpenSchool</Highlight>
+          </>
+        }
+        lead="Schools should not have to choose between paper registers and a closed vendor. OpenSchool is a shared, open-source alternative that any school can run and improve."
       />
-      <header className="os-page-header">
-        <div className="os-container">
-          <div className={styles.introGrid}>
-            <div className={styles.introInner}>
-              <h1 className={`os-heading ${styles.title}`}>
-                Replacing paper registers with one secure system
-              </h1>
-              <p className={`os-lead ${styles.lead}`}>
-                OpenSchool is a self-hosted school management system purpose-built for Sri Lankan
-                schools - one secure application that models everything from academic years and
-                grades - Scholarship through A/Level - to guardians and daily attendance, so school
-                records stop living across notebooks, spreadsheets, and disconnected systems.
-              </p>
-            </div>
-            <div className={styles.introPhotoWrap}>
-              <img
-                src={introPhotoSrc}
-                alt="Students at a morning assembly in a Sri Lankan school"
-                className={styles.introPhoto}
-                loading="eager"
-                decoding="async"
-              />
-            </div>
-          </div>
-        </div>
-      </header>
 
-      <section className="os-section os-section--tight">
-        <div className="os-container">
-          <div className="os-grid os-grid--2">
-            <div className={`os-card ${styles.storyCard}`}>
-              <span className="os-eyebrow">Our Mission</span>
-              <h3 className={styles.cardTitle}>Give every school a proper system of record</h3>
-              <p className={styles.cardText}>
-                Most Sri Lankan schools still track students, grades, and attendance across paper
-                registers and disconnected spreadsheets. OpenSchool gives every school - regardless
-                of size - a structured, secure, API-driven system of record for its academic data.
-              </p>
-            </div>
-            <div className={`os-card ${styles.storyCard}`}>
-              <span className="os-eyebrow">Our Vision</span>
-              <h3 className={styles.cardTitle}>Community infrastructure, not a vendor</h3>
-              <p className={styles.cardText}>
-                We&apos;re building OpenSchool in the open, as software any school - or anyone
-                building for schools - can run, inspect, and contribute to, instead of every
-                school reinventing student records from scratch or depending on a closed vendor.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Section>
+        <SectionHead title="Mission and vision" />
+        <CardGrid cols={2}>
+          <Card title="Mission">
+            <p className={styles.statement}>
+              Give every school a structured, secure and self-hosted system of record for its
+              academic data, modelled on the Sri Lankan education system and free for anyone to use.
+            </p>
+          </Card>
+          <Card title="Vision">
+            <p className={styles.statement}>
+              A shared, community-maintained platform that schools, education offices and local
+              integrators can run, inspect and extend, instead of each school rebuilding the same
+              records from scratch.
+            </p>
+          </Card>
+        </CardGrid>
+      </Section>
 
-      <section className="os-section os-section--alt">
-        <div className="os-container">
-          <span className="os-eyebrow">What guides us</span>
-          <h2 className="os-heading" style={{marginBottom: '2.5rem'}}>Principles behind the platform</h2>
-          <div className="os-grid os-grid--4">
-            {principles.map((p) => (
-              <div key={p.title} className={`os-card ${styles.principleCard}`}>
-                <div className={styles.principleIcon}>
-                  <p.icon size={20} strokeWidth={1.75} />
-                </div>
-                <h3 className={styles.principleTitle}>{p.title}</h3>
-                <p className={styles.principleDesc}>{p.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Section subtle>
+        <SectionHead title="Guiding principles" />
+        <CardGrid cols={3}>
+          {principles.map((p, i) => (
+            <Card key={p.title} index={i + 1} title={p.title}>
+              <p>{p.body}</p>
+            </Card>
+          ))}
+        </CardGrid>
+      </Section>
 
-      <section className="os-section os-section--tight">
-        <div className="os-container">
-          <span className="os-eyebrow">Who it&apos;s for</span>
-          <h2 className="os-heading" style={{marginBottom: '2.5rem'}}>Built for everyone around a school</h2>
-          <div className="os-grid os-grid--4">
-            {audiences.map((a) => (
-              <div key={a.title} className={`os-card ${styles.audienceCard}`}>
-                <div className={styles.audienceIcon}>
-                  <a.icon size={20} strokeWidth={1.75} />
-                </div>
-                <h3 className={styles.audienceTitle}>{a.title}</h3>
-                <p className={styles.audienceDesc}>{a.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Section>
+        <SectionHead
+          title="How the project is run"
+          link={{label: 'Contributing guide', to: '/docs/contributing'}}
+        />
+        <CardGrid cols={3}>
+          {governance.map((g) => (
+            <Card key={g.title} title={g.title} footer={<GovLink item={g} />}>
+              <p>{g.body}</p>
+            </Card>
+          ))}
+        </CardGrid>
+      </Section>
 
-      <section className="os-section">
-        <div className="os-container">
-          <div className={`os-panel ${styles.ctaBanner}`}>
-            <div>
-              <h2 className="os-heading" style={{marginBottom: '0.5rem'}}>Want to run it for your school?</h2>
-              <p className={styles.ctaText}>The setup guide walks through every module hands-on.</p>
-            </div>
-            <Link className="os-btn os-btn--primary" to="/docs/setup">
-              Read the Setup Guide
-              <ArrowRight size={17} strokeWidth={2.25} />
+      <CtaBand
+        title="Bring OpenSchool to your school"
+        text="The documentation covers setup, identity configuration and a walkthrough of every module."
+        actions={
+          <>
+            <Link className="os-btn os-btn--primary" to="/docs/intro">
+              Read the documentation
             </Link>
-          </div>
-        </div>
-      </section>
+            <Link className="os-btn os-btn--secondary" to="/community">
+              Get involved
+            </Link>
+          </>
+        }
+      />
     </Layout>
   );
 }
