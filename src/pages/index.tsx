@@ -1,337 +1,203 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
-import CodeBlock from '@theme/CodeBlock';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import {ArrowRight, Terminal, GitBranch, Bug, MessageCircle} from 'lucide-react';
-import Reveal from '@site/src/components/Reveal';
-import DynamicIcon from '@site/src/components/DynamicIcon';
+import {ArrowUpRight} from 'lucide-react';
 import SeoHead from '@site/src/components/SeoHead';
-import TechLogos from '@site/src/components/TechLogos';
-import features from '@site/src/data/generated/features';
+import {links, moduleCount, latestRelease, formatDate} from '@site/src/data/site';
+import {
+  PageHero,
+  Highlight,
+  ReleaseLink,
+  Section,
+  SectionHead,
+  CardGrid,
+  Card,
+  CtaBand,
+} from '@site/src/components/Page';
 import styles from './index.module.css';
 
-const GITHUB_URL = 'https://github.com/openschool-org/openschool';
+const DESCRIPTION =
+  'OpenSchool is a free, open-source, self-hosted school management system for Sri Lankan schools: students, staff, classes, attendance, timetables and the academic year in one system of record that the school owns.';
 
-function GithubIcon(): React.ReactElement {
+const heroFacts = [
+  {title: 'Sri Lankan curriculum', body: 'Grades 1–13, from Primary to O/Level and A/Level streams'},
+  {title: 'Trilingual', body: 'Sinhala, Tamil and English mediums of instruction'},
+  {title: 'Role-based portals', body: 'For administrators, teachers, students and guardians'},
+  {title: 'Your own infrastructure', body: 'Deployed and controlled entirely by the school'},
+];
+
+const principles = [
+  {
+    title: 'Modelled on the national system',
+    body: 'Grades 1–13, O/Level and A/Level streams, mediums, houses and prefects are part of the data model, not configuration added afterwards.',
+  },
+  {
+    title: 'The school owns its data',
+    body: 'Every deployment is self-hosted. Student and guardian records stay on infrastructure the school controls, and the project has no access to any instance.',
+  },
+  {
+    title: 'Open by default',
+    body: 'Apache 2.0 licensed and developed in public, with design decisions recorded so anyone can see why the system works the way it does.',
+  },
+  {
+    title: 'Secure by design',
+    body: 'Standards-based sign-in, role checks enforced on the server for every request, rate limiting, and an append-only audit log.',
+  },
+];
+
+const localFit = [
+  {title: 'Grade structure', body: 'The full Grade 1–13 flow with lettered class sections, from Primary through Junior, O/Level and A/Level.'},
+  {title: 'A/Level streams', body: 'Physical Science, Bio Science, Commerce, Arts and Technology, with stream groups and section codes such as 12-M1.'},
+  {title: 'Mediums of instruction', body: 'Sinhala, Tamil and English mediums that carry over automatically when students are promoted.'},
+  {title: 'Names and identity', body: 'Full name, name with initials and calling name, never split into first and last. Guardians are matched by NIC.'},
+  {title: 'School life', body: 'Houses with automatic balancing, a rank-based prefect board, and societies with a teacher-in-charge.'},
+  {title: 'Staff hierarchy', body: 'Principal, Vice Principal, Section Head, Class Teacher and Subject Teacher, each with the reach their position grants.'},
+];
+
+const portals = [
+  {
+    name: 'Administration',
+    body: 'School profile, academic structure, staff and student records, year-end workflows, reports and settings.',
+  },
+  {
+    name: 'Teachers',
+    body: "Today's attendance, assigned classes and subjects, the published timetable, and tools scoped to their position.",
+  },
+  {
+    name: 'Students',
+    body: 'Their own profile, attendance history, term marks, timetable and notifications, and nothing beyond it.',
+  },
+  {
+    name: 'Guardians',
+    body: 'An overview across their children with per-child attendance, marks, timetable and school notices.',
+  },
+];
+
+const stack = [
+  {name: 'Go', role: 'Backend REST API', logo: 'img/tech/go.svg'},
+  {name: 'PostgreSQL', role: 'Primary database', logo: 'img/tech/postgresql.svg'},
+  {name: 'React', role: 'Role-based portals', logo: 'img/tech/react.svg'},
+  {name: 'TypeScript', role: 'Type-safe frontend', logo: 'img/tech/typescript.webp'},
+  {name: 'Vite', role: 'Frontend build tooling', logo: 'img/tech/vite.svg'},
+  {name: 'ThunderID', role: 'Identity and sign-in', logo: 'img/tech/thunderid.webp'},
+  {name: 'Ant Design', role: 'Interface components', logo: 'img/tech/antdesign.svg'},
+  {name: 'Docker', role: 'Containerised setup', logo: 'img/tech/docker.svg'},
+];
+
+function TechCard({name, role, logo}: {name: string; role: string; logo: string}): React.ReactElement {
+  const src = useBaseUrl(logo);
   return (
-    <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true">
-      <path
-        fillRule="evenodd"
-        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-      />
-    </svg>
+    <li className={styles.techCard}>
+      <img src={src} alt="" width={36} height={36} loading="lazy" decoding="async" className={styles.techLogo} />
+      <div>
+        <div className={styles.techName}>{name}</div>
+        <div className={styles.techRole}>{role}</div>
+      </div>
+    </li>
   );
 }
 
-const stats = [
-  {value: '4', label: 'Role-Based Portals'},
-  {value: 'LK', label: 'Built for Sri Lanka'},
-];
-
-const badges = [
-  {
-    label: 'Backend CI',
-    href: `${GITHUB_URL}/actions/workflows/backend-ci.yml`,
-    src: `${GITHUB_URL}/actions/workflows/backend-ci.yml/badge.svg`,
-  },
-  {
-    label: 'Frontend CI',
-    href: `${GITHUB_URL}/actions/workflows/frontend-ci.yml`,
-    src: `${GITHUB_URL}/actions/workflows/frontend-ci.yml/badge.svg`,
-  },
-  {
-    label: 'Apache 2.0 License',
-    href: `${GITHUB_URL}/blob/main/LICENSE`,
-    src: 'https://img.shields.io/badge/license-Apache%202.0-blue.svg',
-  },
-  {
-    label: 'Contributor Covenant 2.1',
-    href: `${GITHUB_URL}/blob/main/CODE_OF_CONDUCT.md`,
-    src: 'https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg',
-  },
-];
-
-const services = features.filter((f) => f.homeFeatured);
-
-type CommunityCard = {
-  icon: React.ComponentType<{size?: number; strokeWidth?: number}>;
-  title: string;
-  desc: string;
-  linkLabel: string;
-  linkTo?: string;
-  linkHref?: string;
-};
-
-const communityCards: CommunityCard[] = [
-  {
-    icon: GitBranch,
-    title: 'Contribute',
-    desc: 'Help shape OpenSchool by submitting features, fixes, or improvements.',
-    linkLabel: 'Local Development Setup',
-    linkTo: '/docs/contributing',
-  },
-  {
-    icon: Bug,
-    title: 'Report an Issue',
-    desc: 'Found a bug or have an idea? Open an issue and help make the platform better.',
-    linkLabel: 'Open an issue',
-    linkHref: `${GITHUB_URL}/issues`,
-  },
-  {
-    icon: MessageCircle,
-    title: 'Join the Discussion',
-    desc: 'Ask questions, share ideas, and talk with other people running OpenSchool.',
-    linkLabel: 'GitHub Discussions',
-    linkHref: `${GITHUB_URL}/discussions`,
-  },
-];
-
-const QUICK_START = `git clone https://github.com/openschool-org/openschool.git
-cd openschool
-
-# Postgres
-cd backend && docker compose up -d
-
-# Backend - migrations run automatically
-go run ./cmd/api/main.go
-
-# Frontend
-cd ../frontend && pnpm install && pnpm dev`;
-
 export default function Home(): React.ReactElement {
-  const heroPhotoSrc = useBaseUrl('img/school/school1.webp');
-  const aboutPhotoSrc1 = useBaseUrl('img/school/school2.webp');
-  const aboutPhotoSrc2 = useBaseUrl('img/school/school3.webp');
-
   return (
-    <Layout
-      title="OpenSchool"
-      description="A free, open-source, self-hosted school management system covering academic years, students, guardians, attendance, timetables, and more - built for Sri Lankan schools.">
-      <SeoHead
-        path="/"
-        title="Open Source School Management for Sri Lankan Schools"
-        description="A free, open-source, self-hosted school management system covering academic years, students, guardians, attendance, timetables, and more - built for Sri Lankan schools."
+    <Layout title="Open-source school management for Sri Lanka" description={DESCRIPTION}>
+      <SeoHead path="/" title="Open-source school management for Sri Lanka" description={DESCRIPTION} />
+
+      <PageHero
+        variant="home"
+        top={latestRelease ? <ReleaseLink version={latestRelease.version} date={formatDate(latestRelease.date)} /> : null}
+        title={
+          <>
+            Open digital infrastructure for <Highlight>Sri Lankan schools</Highlight>
+          </>
+        }
+        lead="A free, open-source system of record for students, staff, classes, attendance and the academic year. Modelled on the national school system, and run on infrastructure the school controls."
+        actions={
+          <>
+            <Link className="os-btn os-btn--primary" to="/docs/intro">
+              Read the documentation
+            </Link>
+            <a className="os-btn os-btn--secondary" href={links.repo} target="_blank" rel="noopener noreferrer">
+              View source on GitHub
+              <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
+            </a>
+          </>
+        }
+        facts={heroFacts}
       />
 
-      <header className={styles.hero}>
-        <div className="os-container">
-          <div className={styles.heroGrid}>
-            <div className={styles.heroCopy}>
-              <h1 className={`os-heading ${styles.heroTitle}`}>
-                One platform for your entire school&apos;s records
-              </h1>
-              <p className={`os-lead ${styles.heroLead}`}>
-                Academic years, classes, students, guardians, attendance, and timetables - in one
-                self-hosted system. No more spreadsheets. No more paper registers.
-              </p>
-              <div className={styles.heroActions}>
-                <Link className="os-btn os-btn--primary" to="/docs/intro">
-                  Get Started
-                </Link>
-                <a
-                  className="os-btn os-btn--ghost"
-                  href={GITHUB_URL}
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <GithubIcon />
-                  View on GitHub
-                </a>
-              </div>
+      <Section>
+        <SectionHead
+          title="Built as public digital infrastructure"
+          intro="Schools should not have to choose between paper registers and a closed vendor. OpenSchool is shared infrastructure that any school can run, inspect and improve."
+          link={{label: 'About the project', to: '/about'}}
+        />
+        <CardGrid cols={4}>
+          {principles.map((p, i) => (
+            <Card key={p.title} index={i + 1} title={p.title}>
+              <p>{p.body}</p>
+            </Card>
+          ))}
+        </CardGrid>
+      </Section>
 
-              <div className={styles.badgeRow}>
-                {badges.map((b) => (
-                  <a
-                    key={b.label}
-                    href={b.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={b.label}
-                    className={styles.badgeLink}>
-                    <img src={b.src} alt={b.label} className={styles.badgeImg} loading="lazy" decoding="async" />
-                  </a>
-                ))}
-              </div>
-            </div>
+      <Section subtle>
+        <SectionHead
+          title="Aligned with the Sri Lankan education system"
+          intro="Generic school software is usually built for other education systems and adapted later. OpenSchool starts from the structure of a Sri Lankan school."
+        />
+        <CardGrid cols={3}>
+          {localFit.map((f) => (
+            <Card key={f.title} title={f.title}>
+              <p>{f.body}</p>
+            </Card>
+          ))}
+        </CardGrid>
+      </Section>
 
-            <div className={styles.heroPhotoWrap}>
-              <img
-                src={heroPhotoSrc}
-                alt="Students at a Sri Lankan school"
-                className={styles.heroPhoto}
-                width={1536}
-                height={1024}
-                fetchPriority="high"
-                decoding="async"
-              />
-            </div>
-          </div>
+      <Section>
+        <SectionHead
+          title="Role-based access for every user"
+          intro="Everyone signs in at the same place and lands in the portal their role grants. Access is enforced on the server, so students and guardians only see their own records."
+          link={{label: `Explore all ${moduleCount} modules`, to: '/features'}}
+        />
+        <CardGrid cols={4}>
+          {portals.map((p) => (
+            <Card key={p.name} title={p.name}>
+              <p>{p.body}</p>
+            </Card>
+          ))}
+        </CardGrid>
+      </Section>
 
-          <div className={styles.statBar}>
-            {stats.map((s) => (
-              <div key={s.label} className={styles.statItem}>
-                <div className={styles.statValue}>{s.value}</div>
-                <div className={styles.statLabel}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </header>
+      <Section subtle>
+        <SectionHead
+          title="Built on a proven open-source stack"
+          intro="Widely adopted components that a school IT team or local integrator can run, maintain and extend without specialist knowledge."
+          link={{label: 'How it fits together', to: '/docs/architecture'}}
+        />
+        <CardGrid cols={4}>
+          {stack.map((t) => (
+            <TechCard key={t.name} {...t} />
+          ))}
+        </CardGrid>
+      </Section>
 
-      <section className="os-section os-section--tight">
-        <div className="os-container">
-          <Reveal>
-            <div className={styles.quickstartGrid}>
-              <div className={styles.quickstartCopy}>
-                <span className="os-eyebrow">
-                  <Terminal size={14} strokeWidth={2.25} style={{verticalAlign: '-2px', marginRight: '0.4rem'}} />
-                  Quick Start
-                </span>
-                <h2 className={`os-heading ${styles.quickstartTitle}`}>
-                  Ready to self-host OpenSchool for your school?
-                </h2>
-                <p className={styles.quickstartText}>
-                  Clone the repo, start Postgres, and run the backend and frontend locally in a
-                  few commands. The setup guide walks through the rest - first-run admin
-                  registration, the school setup wizard, and every module hands-on.
-                </p>
-                <Link className="os-btn os-btn--primary" to="/docs/setup">
-                  Read the Setup Guide
-                </Link>
-              </div>
-              <div className={styles.quickstartCode}>
-                <CodeBlock language="bash" title="Run it locally">
-                  {QUICK_START}
-                </CodeBlock>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="os-section os-section--alt">
-        <div className="os-container">
-          <Reveal>
-            <div className={styles.servicesIntro}>
-              <span className="os-eyebrow">What We Automate</span>
-              <div className={styles.servicesIntroGrid}>
-                <h2 className={`os-heading ${styles.servicesTitle}`}>
-                  Every school operation, one platform
-                </h2>
-                <p className={styles.servicesDesc}>
-                  From opening an academic year to marking today&apos;s attendance, OpenSchool
-                  replaces disconnected tools with one consistent, API-driven system that scales
-                  with your school.
-                </p>
-              </div>
-            </div>
-
-            <div className="os-grid os-grid--3">
-              {services.map((s, i) => (
-                <div key={s.slug} className={`os-card ${styles.serviceCard}`}>
-                  <span className={styles.serviceNumber}>{String(i + 1).padStart(2, '0')}</span>
-                  <div className={styles.serviceIcon}>
-                    <DynamicIcon name={s.icon} size={20} strokeWidth={1.75} />
-                  </div>
-                  <h3 className={styles.serviceTitle}>{s.title}</h3>
-                  <p className={styles.serviceDesc}>{s.summary}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="os-section os-section--tight">
-        <div className="os-container">
-          <Reveal>
-            <div className={styles.techIntro}>
-              <span className="os-eyebrow" style={{textAlign: 'center'}}>
-                Built On Open Standards
-              </span>
-            </div>
-            <TechLogos />
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="os-section">
-        <div className="os-container">
-          <Reveal>
-            <div className={styles.aboutGrid}>
-              <div className={styles.aboutPhotoGrid}>
-                <img src={aboutPhotoSrc1} alt="Students talking together at school" className={styles.aboutPhoto} loading="lazy" decoding="async" />
-                <img src={aboutPhotoSrc2} alt="Students playing together at school" className={styles.aboutPhoto} loading="lazy" decoding="async" />
-              </div>
-              <div className={styles.aboutCopy}>
-                <span className="os-eyebrow">About OpenSchool</span>
-                <h2 className={`os-heading ${styles.aboutTitle}`}>
-                  Infrastructure built for how Sri Lankan schools actually run
-                </h2>
-                <p className={styles.aboutText}>
-                  Most schools still track students, grades, and attendance across paper
-                  registers and disconnected spreadsheets. OpenSchool gives every school a
-                  structured, secure, self-hosted system of record - modeled around the full
-                  Grade 1-13 flow, from Scholarship years through O/Level and A/Level streams,
-                  and the people who keep a school running.
-                </p>
-                <Link className={styles.aboutLink} to="/about">
-                  Learn more about our mission
-                  <ArrowRight size={16} strokeWidth={2.25} />
-                </Link>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="os-section os-section--alt">
-        <div className="os-container">
-          <Reveal>
-            <div className={styles.communityIntro}>
-              <span className="os-eyebrow">Join the Community</span>
-              <h2 className={`os-heading ${styles.communityTitle}`}>
-                We&apos;re building OpenSchool with you
-              </h2>
-              <p className={styles.communityDesc}>
-                It&apos;s a volunteer-run, open-source project - no sales team, no support inbox.
-                Everything happens on GitHub.
-              </p>
-            </div>
-
-            <div className="os-grid os-grid--3">
-              {communityCards.map((c) => (
-                <div key={c.title} className={`os-card ${styles.communityCard}`}>
-                  <div className={styles.communityCardIcon}>
-                    <c.icon size={20} strokeWidth={1.75} />
-                  </div>
-                  <h3 className={styles.communityCardTitle}>{c.title}</h3>
-                  <p className={styles.communityCardDesc}>{c.desc}</p>
-                  {c.linkHref ? (
-                    <a
-                      className={styles.communityCardLink}
-                      href={c.linkHref}
-                      target="_blank"
-                      rel="noopener noreferrer">
-                      {c.linkLabel} <ArrowRight size={14} strokeWidth={2.25} />
-                    </a>
-                  ) : (
-                    <Link className={styles.communityCardLink} to={c.linkTo}>
-                      {c.linkLabel} <ArrowRight size={14} strokeWidth={2.25} />
-                    </Link>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className={styles.communityMore}>
-              <Link to="/community">
-                See all the ways to get involved <ArrowRight size={15} strokeWidth={2.25} />
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      <CtaBand
+        title="Developed openly with the community"
+        text="OpenSchool has no sales team and no support inbox. Development, questions and decisions all happen in public on GitHub. Contributions from developers, educators and school administrators are welcome."
+        actions={
+          <>
+            <Link className="os-btn os-btn--primary" to="/community">
+              Get involved
+            </Link>
+            <a className="os-btn os-btn--secondary" href={links.discussions} target="_blank" rel="noopener noreferrer">
+              Join the discussion
+              <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
+            </a>
+          </>
+        }
+      />
     </Layout>
   );
 }

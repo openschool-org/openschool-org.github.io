@@ -1,132 +1,133 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
-import {GitBranch, MessageCircle, Bug, ShieldAlert, HeartHandshake, Scale, type LucideProps} from 'lucide-react';
+import {ArrowRight, ArrowUpRight} from 'lucide-react';
 import SeoHead from '@site/src/components/SeoHead';
+import {PageHero, Highlight, Section, SectionHead, CardGrid, Card} from '@site/src/components/Page';
+import {links, team} from '@site/src/data/site';
 import styles from './community.module.css';
 
-const GITHUB_URL = 'https://github.com/openschool-org/openschool';
+const DESCRIPTION =
+  'Meet the people building OpenSchool, and find out how to contribute, ask a question, or report a bug or security issue.';
 
 type Channel = {
-  icon: React.ComponentType<LucideProps>;
   title: string;
-  desc: string;
-  linkLabel: string;
-  linkTo?: string;
-  linkHref?: string;
+  body: string;
+  label: string;
+  to?: string;
+  href?: string;
 };
 
 const channels: Channel[] = [
   {
-    icon: GitBranch,
     title: 'Contribute',
-    desc: 'Get the dev environment running from the Setup Walkthrough, then see the Contributing guide for coding standards and branch/PR conventions.',
-    linkLabel: 'Read the Contributing Guide',
-    linkTo: '/docs/contributing',
+    body: 'Set up the development environment and follow the contributing guide for code and documentation changes.',
+    label: 'Contributing guide',
+    to: '/docs/contributing',
   },
   {
-    icon: MessageCircle,
     title: 'Ask a question',
-    desc: 'Use GitHub Discussions for questions, ideas, and general conversation about the project.',
-    linkLabel: 'Open Discussions',
-    linkHref: `${GITHUB_URL}/discussions`,
+    body: 'Use GitHub Discussions for questions about running OpenSchool, feature proposals and general conversation.',
+    label: 'Discussions',
+    href: links.discussions,
   },
   {
-    icon: Bug,
     title: 'Report a bug',
-    desc: 'Found something broken? Open an issue with steps to reproduce, what you expected, and what happened instead.',
-    linkLabel: 'Open an issue',
-    linkHref: `${GITHUB_URL}/issues`,
+    body: 'Open an issue with steps to reproduce, what you expected to happen and what happened instead.',
+    label: 'Issue tracker',
+    href: links.issues,
   },
   {
-    icon: ShieldAlert,
-    title: 'Report a security issue',
-    desc: 'Please don\'t open a public issue for a vulnerability. Use GitHub\'s private vulnerability reporting (Security tab → Report a vulnerability) instead.',
-    linkLabel: 'Read the Security Policy',
-    linkHref: `${GITHUB_URL}/blob/main/SECURITY.md`,
-  },
-  {
-    icon: HeartHandshake,
-    title: 'Code of Conduct',
-    desc: 'OpenSchool follows the Contributor Covenant. By participating in the project - code, issues, discussions - you agree to abide by it.',
-    linkLabel: 'Read the Code of Conduct',
-    linkTo: '/docs/code-of-conduct',
-  },
-  {
-    icon: Scale,
-    title: 'License',
-    desc: 'OpenSchool is free and open source software, licensed under the Apache License 2.0.',
-    linkLabel: 'Read the License',
-    linkHref: `${GITHUB_URL}/blob/main/LICENSE`,
+    title: 'Report a vulnerability',
+    body: 'Never open a public issue for a security problem. Use private vulnerability reporting instead.',
+    label: 'Security policy',
+    href: links.security,
   },
 ];
 
+function ChannelLink({c}: {c: Channel}): React.ReactElement {
+  return c.href ? (
+    <a className="os-link" href={c.href} target="_blank" rel="noopener noreferrer">
+      {c.label}
+      <ArrowUpRight size={15} strokeWidth={2} aria-hidden="true" />
+    </a>
+  ) : (
+    <Link className="os-link" to={c.to}>
+      {c.label}
+      <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
+    </Link>
+  );
+}
+
 export default function Community(): React.ReactElement {
   return (
-    <Layout
-      title="Community"
-      description="OpenSchool is built in the open. Here's how to contribute code, ask a question, report a bug, or reach the maintainers.">
-      <SeoHead
-        path="/community"
-        title="Community - Contribute, Ask, or Report"
-        description="OpenSchool is built in the open. Here's how to contribute code, ask a question, report a bug, or reach the maintainers."
-      />
-      <header className="os-page-header">
-        <div className="os-container">
-          <div className={styles.introInner}>
-            <h1 className={`os-heading ${styles.title}`}>Get involved</h1>
-            <p className={`os-lead ${styles.lead}`}>
-              OpenSchool is built in the open, by volunteers. There&apos;s no sales team and no
-              support inbox - everything happens on GitHub.
-            </p>
-          </div>
-        </div>
-      </header>
+    <Layout title="Community" description={DESCRIPTION}>
+      <SeoHead path="/community" title="Community" description={DESCRIPTION} />
 
-      <section className="os-section os-section--tight">
-        <div className="os-container">
-          <div className="os-grid os-grid--2">
-            {channels.map((c) => (
-              <div key={c.title} className={`os-card ${styles.channelCard}`}>
-                <div className={styles.channelIcon}>
-                  <c.icon size={19} strokeWidth={1.75} />
-                </div>
-                <div>
-                  <div className={styles.channelTitle}>{c.title}</div>
-                  <div className={styles.channelValue}>{c.desc}</div>
-                  {c.linkHref ? (
-                    <a
-                      className={styles.channelLink}
-                      href={c.linkHref}
-                      target="_blank"
-                      rel="noopener noreferrer">
-                      {c.linkLabel} →
-                    </a>
-                  ) : (
-                    <Link className={styles.channelLink} to={c.linkTo}>
-                      {c.linkLabel} →
-                    </Link>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="os-section os-section--alt">
-        <div className="os-container">
-          <span className="os-eyebrow">Maintainers</span>
-          <h2 className="os-heading" style={{marginBottom: '0.5rem'}}>Started and maintained by</h2>
-          <p className={styles.channelValue}>
-            This project is fully maintained and operated by open source contributors - see the{' '}
-            <a href={`${GITHUB_URL}/graphs/contributors`} target="_blank" rel="noopener noreferrer">
-              contributors graph
+      <PageHero
+        title={
+          <>
+            Giving back to <Highlight>free education</Highlight>
+          </>
+        }
+        lead="Many of us were educated through Sri Lanka’s free education system. OpenSchool is our way of giving back: volunteers building open, public infrastructure for the schools that taught us."
+        actions={
+          <>
+            <Link className="os-btn os-btn--primary" to="/docs/contributing">
+              Start contributing
+            </Link>
+            <a className="os-btn os-btn--secondary" href={links.repo} target="_blank" rel="noopener noreferrer">
+              View on GitHub
+              <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
             </a>
-            .
-          </p>
-        </div>
-      </section>
+          </>
+        }
+      />
+
+      <Section>
+        <SectionHead
+          center
+          title="Core maintainers"
+          intro="The team that maintains OpenSchool, reviews contributions and publishes releases."
+        />
+        <ul className={styles.people}>
+          {team.map(({login, name}) => (
+            <li key={login}>
+              <a href={`https://github.com/${encodeURIComponent(login)}`} target="_blank" rel="noopener noreferrer">
+                <img
+                  src={`https://github.com/${encodeURIComponent(login)}.png?size=192`}
+                  alt=""
+                  width={88}
+                  height={88}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span className={styles.personName}>{name}</span>
+                <span className={styles.personHandle}>@{login}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section subtle>
+        <SectionHead
+          title="Ways to take part"
+          intro={
+            <>
+              Participation in every project space is governed by the{' '}
+              <Link to="/docs/code-of-conduct">Contributor Covenant</Link>.
+            </>
+          }
+        />
+        <CardGrid cols={4}>
+          {channels.map((c) => (
+            <Card key={c.title} title={c.title} footer={<ChannelLink c={c} />}>
+              <p>{c.body}</p>
+            </Card>
+          ))}
+        </CardGrid>
+      </Section>
     </Layout>
   );
 }

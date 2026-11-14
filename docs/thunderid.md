@@ -53,7 +53,7 @@ logs.
 
 Look for a block like:
 
-```
+```text
 Admin credentials:
   Username: admin
   Password: <random string>
@@ -233,7 +233,7 @@ easy to get wrong, so pay attention to the notes below.
 
 **Backend `.env`**
 
-```dotenv
+```ini
 THUNDERID_JWKS_URL=https://localhost:8090/oauth2/jwks
 THUNDERID_ISSUER=https://localhost:8090
 
@@ -276,7 +276,7 @@ THUNDERID_RESOURCE=https://localhost:8090/mcp
 
 **Frontend `.env`**
 
-```dotenv
+```ini
 VITE_THUNDERID_CLIENT_ID=<frontend Application ID from above>
 VITE_THUNDERID_BASE_URL=https://localhost:8090
 VITE_THUNDERID_SCOPES="openid profile email roles"

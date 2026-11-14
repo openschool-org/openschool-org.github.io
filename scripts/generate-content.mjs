@@ -97,8 +97,22 @@ function parseGithubBody(body) {
     }
   };
 
+  // A non-blank line directly after a bullet (no blank line between) is a
+  // hard-wrapped continuation of that bullet, not a new paragraph.
+  let prevWasListItem = false;
+
   for (const rawLine of (body || '').replace(/\r\n/g, '\n').split('\n')) {
     const line = rawLine.trim();
+    const isContinuation =
+      prevWasListItem && line && !/^(#{1,6} |[-*] )/.test(line);
+    if (isContinuation) {
+      const last = current?.blocks[current.blocks.length - 1];
+      if (last?.type === 'list') {
+        last.items[last.items.length - 1] += ` ${stripMarkdown(line)}`;
+        continue;
+      }
+    }
+    prevWasListItem = line.startsWith('- ') || line.startsWith('* ');
     if (line.startsWith('## ')) {
       sawHeading = true;
       current = {heading: stripMarkdown(line.slice(3)), blocks: []};
@@ -233,8 +247,85 @@ export default changelog;
 
   writeFileSync(outFile, banner + body);
   console.log(`Generated ${outFile} from ${releases.length} releases.`);
+  return releases;
+}
+
+async function generateRepoStats() {
+  const outFile = join(outDir, 'repo.ts');
+  const cacheFile = join(dataDir, 'repo-cache.json');
+
+  let stats;
+  try {
+    const headers = {
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent': 'openschool-web-build',
+    };
+    if (process.env.GITHUB_TOKEN) {
+      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    }
+    const res = await fetch(`https://api.github.com/repos/${CHANGELOG_OWNER}/${CHANGELOG_REPO}`, {headers});
+    if (!res.ok) {
+      throw new Error(`GitHub API responded with ${res.status} ${res.statusText}`);
+    }
+    const repo = await res.json();
+    stats = {stars: repo.stargazers_count ?? 0, forks: repo.forks_count ?? 0};
+    writeFileSync(cacheFile, JSON.stringify(stats, null, 2) + '\n');
+    console.log(`Fetched repo stats (${stats.stars} stars) and refreshed the cache.`);
+  } catch (err) {
+    stats = existsSync(cacheFile) ? JSON.parse(readFileSync(cacheFile, 'utf8')) : {stars: 0, forks: 0};
+    console.warn(`Could not fetch repo stats from GitHub (${err.message}). Using cached values.`);
+  }
+
+  const banner = `// GENERATED FILE - do not edit directly.\n// Source of truth: the GitHub API for ${CHANGELOG_OWNER}/${CHANGELOG_REPO}, cached at src/data/repo-cache.json.\n// Regenerate with \`npm run generate:content\`.\n\n`;
+  writeFileSync(
+    outFile,
+    `${banner}const repo = ${JSON.stringify(stats, null, 2)};\n\nexport default repo;\n`,
+  );
+}
+
+// Display names for everyone credited in a release, from their public
+// GitHub profile. Cached so a rate-limited or offline build still has names.
+async function generateContributors(releases) {
+  const outFile = join(outDir, 'contributors.ts');
+  const cacheFile = join(dataDir, 'contributors-cache.json');
+  const cache = existsSync(cacheFile) ? JSON.parse(readFileSync(cacheFile, 'utf8')) : {};
+
+  const logins = [...new Set(releases.flatMap((r) => r.contributors))];
+  const headers = {
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'openschool-web-build',
+  };
+  if (process.env.GITHUB_TOKEN) {
+    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  }
+
+  let fetched = 0;
+  for (const login of logins) {
+    try {
+      const res = await fetch(`https://api.github.com/users/${encodeURIComponent(login)}`, {headers});
+      if (!res.ok) throw new Error(`${res.status}`);
+      const user = await res.json();
+      cache[login] = user.name || cache[login] || login;
+      fetched += 1;
+    } catch {
+      cache[login] = cache[login] || login;
+    }
+  }
+  writeFileSync(cacheFile, JSON.stringify(cache, null, 2) + '\n');
+  console.log(`Resolved ${logins.length} contributor names (${fetched} fetched from GitHub, rest from cache).`);
+
+  const people = logins.map((login) => ({login, name: cache[login]}));
+  const banner = `// GENERATED FILE - do not edit directly.\n// Source of truth: public GitHub profiles, cached at src/data/contributors-cache.json.\n// Regenerate with \`npm run generate:content\`.\n\n`;
+  writeFileSync(
+    outFile,
+    `${banner}export type Contributor = {login: string; name: string};\n\nconst contributors: Contributor[] = ${JSON.stringify(people, null, 2)};\n\nexport default contributors;\n`,
+  );
 }
 
 mkdirSync(outDir, {recursive: true});
 generateFeatures();
-await generateChangelog();
+const releases = await generateChangelog();
+await generateRepoStats();
+await generateContributors(releases);
