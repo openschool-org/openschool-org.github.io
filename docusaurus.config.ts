@@ -198,7 +198,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `© ${new Date().getFullYear()} OpenSchool contributors. Released under the Apache License 2.0.`,
+      copyright: `© ${new Date().getFullYear()} OpenSchool contributors · Apache License 2.0`,
     },
     prism: {
       theme: lightCodeTheme,
