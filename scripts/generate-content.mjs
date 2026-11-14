@@ -324,8 +324,59 @@ async function generateContributors(releases) {
   );
 }
 
+// Core maintainers on the Community page: the public members of the
+// openschool-org GitHub organisation, with display names from their
+// profiles. A member only appears once their org membership is public
+// (github.com/orgs/openschool-org/people). Cached so an offline or
+// rate-limited build keeps the last known list.
+async function generateMaintainers() {
+  const outFile = join(outDir, 'maintainers.ts');
+  const cacheFile = join(dataDir, 'maintainers-cache.json');
+  const headers = {
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'openschool-web-build',
+  };
+  if (process.env.GITHUB_TOKEN) {
+    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  }
+
+  let members;
+  try {
+    const res = await fetch(`https://api.github.com/orgs/${CHANGELOG_OWNER}/public_members?per_page=100`, {headers});
+    if (!res.ok) throw new Error(`GitHub API responded with ${res.status} ${res.statusText}`);
+    const logins = (await res.json()).map((m) => m.login);
+    const previous = existsSync(cacheFile) ? JSON.parse(readFileSync(cacheFile, 'utf8')) : [];
+    const knownNames = new Map(previous.map((m) => [m.login, m.name]));
+
+    members = [];
+    for (const login of logins) {
+      let name = knownNames.get(login) || login;
+      try {
+        const userRes = await fetch(`https://api.github.com/users/${encodeURIComponent(login)}`, {headers});
+        if (userRes.ok) name = (await userRes.json()).name || login;
+      } catch {
+        // keep the cached or fallback name
+      }
+      members.push({login, name});
+    }
+    writeFileSync(cacheFile, JSON.stringify(members, null, 2) + '\n');
+    console.log(`Fetched ${members.length} public members of ${CHANGELOG_OWNER} and refreshed the cache.`);
+  } catch (err) {
+    members = existsSync(cacheFile) ? JSON.parse(readFileSync(cacheFile, 'utf8')) : [];
+    console.warn(`Could not fetch ${CHANGELOG_OWNER} members (${err.message}). Using ${members.length} cached.`);
+  }
+
+  const banner = `// GENERATED FILE - do not edit directly.\n// Source of truth: public members of the ${CHANGELOG_OWNER} GitHub organisation, cached at src/data/maintainers-cache.json.\n// Regenerate with \`npm run generate:content\`.\n\n`;
+  writeFileSync(
+    outFile,
+    `${banner}export type Maintainer = {login: string; name: string};\n\nconst maintainers: Maintainer[] = ${JSON.stringify(members, null, 2)};\n\nexport default maintainers;\n`,
+  );
+}
+
 mkdirSync(outDir, {recursive: true});
 generateFeatures();
 const releases = await generateChangelog();
 await generateRepoStats();
 await generateContributors(releases);
+await generateMaintainers();
