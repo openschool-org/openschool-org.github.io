@@ -1,6 +1,5 @@
 import features, {type Feature, type FeatureGroup} from '@site/src/data/generated/features';
 import changelog from '@site/src/data/generated/changelog';
-import maintainers, {type Maintainer} from '@site/src/data/generated/maintainers';
 
 export const SITE_URL = 'https://openschool-org.github.io';
 export const GITHUB_ORG_URL = 'https://github.com/openschool-org';
@@ -64,16 +63,16 @@ export const capabilityCount = features.reduce((sum, f) => sum + f.items.length,
 
 export const latestRelease = changelog[0];
 
-// Display order for Core maintainers on the Community page. Members not
-// listed here follow in the order GitHub returns them.
-const TEAM_ORDER = ['HasithaErandika', 'chamals3n4', 'Krishmal2004', 'SankaChathuranga'];
+// Core maintainers shown on the Community page, in display order.
+// Avatars are loaded from each GitHub profile.
+export type Maintainer = {login: string; name: string};
 
-function rank(login: string): number {
-  const i = TEAM_ORDER.indexOf(login);
-  return i === -1 ? TEAM_ORDER.length : i;
-}
-
-export const team: Maintainer[] = [...maintainers].sort((a, b) => rank(a.login) - rank(b.login));
+export const team: Maintainer[] = [
+  {login: 'HasithaErandika', name: 'Hasitha Erandika'},
+  {login: 'chamals3n4', name: 'Chamal Senarathna'},
+  {login: 'SankaChathuranga', name: 'Sanka Chathuranga'},
+  {login: 'Krishmal2004', name: 'Krishmal Dinidu'},
+];
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
